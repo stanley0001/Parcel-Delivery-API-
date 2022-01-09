@@ -22,7 +22,7 @@ public class CommunicationServiceImpl {
     }
 
     public ResponseModel receiveNotification(Message message){
-        String messageType=message.getMessageType().strip();
+        String messageType=message.getMessageType();
         ResponseModel responseModel=new ResponseModel();
         if (messageType.equals("SMS") || messageType.equals("TEXT")){
             //phone validation
