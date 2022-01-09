@@ -40,7 +40,7 @@ public class ParcelServiceImpl implements ParcelService {
         Parcel parcel1=parcelRepo.save(parcel);
         if (parcel1.getStatus()=="NEW"){
             Notification notification=new Notification();
-            notification.setNotificationType("SMS");
+            notification.setNotificationType("MAIL");
             notification.setItem("Parcel Received");
             notification.setSchedule(Boolean.FALSE);
             notification.setScheduleTime(LocalDateTime.now());
