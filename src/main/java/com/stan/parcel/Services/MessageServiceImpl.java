@@ -58,6 +58,9 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages=messageRepo.findByStatus("NEW");
         for (Message message:
              messages) {
+            if (message.getRetries()==null){
+                message.setRetries(0L);
+            }
             message.setRetries(message.getRetries()+1);
             message.setStatus("PROCESSING");
 
