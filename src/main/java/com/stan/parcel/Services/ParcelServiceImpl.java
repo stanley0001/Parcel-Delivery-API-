@@ -49,7 +49,7 @@ public class ParcelServiceImpl implements ParcelService {
             String[] recipient1;
             //notification push to sender
             if (sender.isPresent()){
-                recipient1= new String[]{sender.get().getPhone()};
+                recipient1= new String[]{sender.get().getPhone(),sender.get().getEmail()};
                 notification.setTo(recipient1);
                 notification.setMessage("Thank You be have Received your parcel sent to "+recipient.get().getName()+" at "+parcel.getCreatedAt());
                ResponseModel response1= messageService.createMessage(notification);
@@ -57,7 +57,7 @@ public class ParcelServiceImpl implements ParcelService {
             }
             //notification push to recipient
             if (recipient.isPresent()){
-                recipient1= new String[]{recipient.get().getPhone()};
+                recipient1= new String[]{recipient.get().getPhone(),recipient.get().getEmail()};
                 notification.setTo(recipient1);
                 notification.setMessage(sender.get().getName()+" Have sent a parcel containing "+parcel.getParcelName()+" You will receive a notification when the Parcel Arrives");
                 ResponseModel response1= messageService.createMessage(notification);
