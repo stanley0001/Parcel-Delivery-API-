@@ -37,22 +37,23 @@ public ResponseModel multipleMessages(Notification[] notifications){
     response.setMessage(count+" Notifications sent");
     return response;
 }
-    Stack<String> sentMessageData = new Stack<String>();
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
-        Message message=new Message();
-        message.setStatus("NEW");
-        message.setMessage(notification.getMessage());
-        message.setMessageType(notification.getNotificationType());
-        message.setCreatedAt(LocalDateTime.now());
-        message.setScheduled(notification.getSchedule());
-        message.setScheduledTime(notification.getScheduleTime());
-        message.setSubject(notification.getItem());
+        Stack<String> sentMessageData = new Stack<String>();
+
         Integer sentMessageCount=0;
         if (notification.getTo().length>0){
             for (String recipient:
                     notification.getTo()) {
-                     message.setRecipient(recipient);
+                Message message=new Message();
+                message.setStatus("NEW");
+                message.setMessage(notification.getMessage());
+                message.setMessageType(notification.getNotificationType());
+                message.setCreatedAt(LocalDateTime.now());
+                message.setScheduled(notification.getSchedule());
+                message.setScheduledTime(notification.getScheduleTime());
+                message.setSubject(notification.getItem());
+                message.setRecipient(recipient);
                      if (message.getScheduled()==null){
                          message.setScheduled(false);
                      }
