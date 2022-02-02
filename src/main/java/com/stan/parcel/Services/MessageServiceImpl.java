@@ -34,7 +34,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
         count=+1;
     }
     response.setStatus(HttpStatus.OK);
-    response.setMessage(count+" Notifications sent");
+    response.setMessage(count+" Notification(s) sent");
     return response;
 }
     public ResponseModel createMessage(Notification notification){
