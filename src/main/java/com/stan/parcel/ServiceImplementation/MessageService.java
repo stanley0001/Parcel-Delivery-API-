@@ -10,4 +10,6 @@ public interface MessageService {
     ResponseModel createMessage(Notification notification);
 
     List<Message> getOutbox();
+
+    ResponseModel multipleMessages(Notification[] notifications);
 }

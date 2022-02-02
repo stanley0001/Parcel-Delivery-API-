@@ -24,7 +24,18 @@ public class MessageServiceImpl implements MessageService {
         this.messageRepo = messageRepo;
         this.communicationService = communicationService;
     }
-
+public ResponseModel multipleMessages(Notification[] notifications){
+        ResponseModel response=new ResponseModel();
+        Integer count=0;
+    for (Notification notification:
+         notifications) {
+        this.createMessage(notification);
+        count=+1;
+    }
+    response.setStatus(HttpStatus.OK);
+    response.setMessage(count+" Notifications sent");
+    return response;
+}
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
         Message message=new Message();
@@ -35,6 +46,7 @@ public class MessageServiceImpl implements MessageService {
         message.setScheduled(notification.getSchedule());
         message.setScheduledTime(notification.getScheduleTime());
         message.setSubject(notification.getItem());
+        Integer sentMessageCount=0;
         if (notification.getTo().length>0){
             for (String recipient:
                     notification.getTo()) {
@@ -43,7 +55,10 @@ public class MessageServiceImpl implements MessageService {
                          message.setScheduled(false);
                      }
                      messageRepo.save(message);
+                     sentMessageCount+=1;
             }
+            response.setStatus(HttpStatus.OK);
+            response.setMessage("Message Count: "+sentMessageCount);
         }
 
         return response;
