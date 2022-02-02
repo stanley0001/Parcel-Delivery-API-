@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Stack;
 
 @Service
 @EnableScheduling
@@ -36,6 +37,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
     response.setMessage(count+" Notifications sent");
     return response;
 }
+    Stack<String> sentMessageData = new Stack<String>();
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
         Message message=new Message();
@@ -54,7 +56,8 @@ public ResponseModel multipleMessages(Notification[] notifications){
                      if (message.getScheduled()==null){
                          message.setScheduled(false);
                      }
-                     messageRepo.save(message);
+                sentMessageData.push(messageRepo.save(message).toString());
+                     response.setReason(sentMessageData.toString());
                      sentMessageCount+=1;
             }
             response.setStatus(HttpStatus.OK);
