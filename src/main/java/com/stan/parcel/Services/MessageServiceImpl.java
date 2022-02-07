@@ -135,6 +135,9 @@ public void SendToNextInstance(Message message){
         if (response.getStatus()!=HttpStatus.BAD_GATEWAY){
             //setting room for retries
             message.setStatus("PROCESSING");
+            if (response.getError()=="Invalid Address"){
+                message.setStatus("Invalid Address "+message.getRecipient());
+            }
         }
     }else {
         //updating success status
