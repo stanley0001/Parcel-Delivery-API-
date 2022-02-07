@@ -37,15 +37,20 @@ public ResponseModel multipleMessages(Notification[] notifications){
     response.setMessage(count+" Notification(s) sent");
     return response;
 }
+    String bulkId;
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
         Stack<String> sentMessageData = new Stack<String>();
 
         Integer sentMessageCount=0;
         if (notification.getTo().length>0){
+            if (notification.getTo().length>0){
+                bulkId=new Message().getId().toString();
+            }
             for (String recipient:
                     notification.getTo()) {
                 Message message=new Message();
+                message.setBulkId(bulkId);
                 message.setStatus("NEW");
                 message.setMessage(notification.getMessage());
                 message.setMessageType(notification.getNotificationType());
