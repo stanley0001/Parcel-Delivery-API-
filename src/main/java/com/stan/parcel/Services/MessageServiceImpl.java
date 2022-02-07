@@ -43,10 +43,8 @@ public ResponseModel multipleMessages(Notification[] notifications){
         Stack<String> sentMessageData = new Stack<String>();
 
         Integer sentMessageCount=0;
+        bulkId=LocalDateTime.now().toString();
         if (notification.getTo().length>0){
-            if (notification.getTo().length>0){
-                bulkId=new Message().getId().toString();
-            }
             for (String recipient:
                     notification.getTo()) {
                 Message message=new Message();
