@@ -17,8 +17,8 @@ public class InfoBidApiService {
     public void auth(){
         ApiClient apiClient = new ApiClient();
         apiClient.setApiKeyPrefix("App");
-        apiClient.setApiKey("");
-        apiClient.setBasePath("");
+        apiClient.setApiKey(System.getenv().get("SMSsecret"));
+        apiClient.setBasePath(System.getenv().get("SMSbaseUrl"));
         Configuration.setDefaultApiClient(apiClient);
     }
 

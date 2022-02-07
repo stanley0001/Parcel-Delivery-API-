@@ -128,7 +128,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
         }
     }
 
-public void SendToNextInstance(Message message){
+public ResponseModel SendToNextInstance(Message message){
     //code to send to communication service
     ResponseModel response=communicationService.receiveNotification(message);
 
@@ -147,7 +147,7 @@ public void SendToNextInstance(Message message){
         message.setStatus("PROCESSED");
     }
     messageRepo.save(message);
-
+  return response;
 }
 
 }
