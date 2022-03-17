@@ -43,7 +43,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
 }
     String bulkId;
     String batchRef;
-
+//this to make notification delivery faster
     @Async
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
