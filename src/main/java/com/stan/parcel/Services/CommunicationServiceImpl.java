@@ -3,6 +3,7 @@ package com.stan.parcel.Services;
 import com.stan.parcel.Percistance.Entities.Message;
 import com.stan.parcel.Percistance.Model.ResponseModel;
 import com.stan.parcel.Services.Communication.InfoBidApiService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
+@Log4j2
 public class CommunicationServiceImpl {
 
 
@@ -26,18 +28,20 @@ public class CommunicationServiceImpl {
         ResponseModel responseModel=new ResponseModel();
         if (messageType.equals("SMS") || messageType.equals("TEXT")){
             //phone validation
-
+            log.info("Sending SMS notification ref: "+message.getBatchId());
             return  this.sendSMS(message);
         }else{
             //email validation
             String regex = "^(.+)@(.+)$";
             if (compileVal(message, responseModel, regex)) return responseModel;
+            log.info("Sending Email notification ref: "+message.getBatchId());
             return  this.sendEmail(message);
         }
 
     }
 
     private boolean compileVal(Message message, ResponseModel responseModel, String phoneVal) {
+        log.info("Address validation notification ref: "+message.getBatchId());
         Pattern pattern = Pattern.compile(phoneVal);
         Matcher matcher = pattern.matcher(message.getRecipient());
         if (!matcher.matches()){
@@ -55,9 +59,9 @@ public class CommunicationServiceImpl {
         ResponseModel response;
         //Email and recipient Validation
 
-       // log.info("Sending Email ....");
+        log.info("Sending Email ....");
         response=mailService.sendEmail(message);
-       // log.info(response);
+        log.info(response);
         return response;
     }
 
@@ -65,7 +69,7 @@ public class CommunicationServiceImpl {
         ResponseModel response;
         //SMS and recipient Validation
 
-       // log.info("Sending SMS ....");
+        log.info("Sending SMS ....");
         response=sms.send(message);
         return response;
     }

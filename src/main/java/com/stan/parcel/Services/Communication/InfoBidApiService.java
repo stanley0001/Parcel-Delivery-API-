@@ -7,14 +7,17 @@ import com.infobip.api.SendSmsApi;
 import com.infobip.model.*;
 import com.stan.parcel.Percistance.Entities.Message;
 import com.stan.parcel.Percistance.Model.ResponseModel;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
 @Service
+@Log4j2
 public class InfoBidApiService {
     public void auth(){
+        log.info("SMS gateway authentication ");
         ApiClient apiClient = new ApiClient();
         apiClient.setApiKeyPrefix("App");
         apiClient.setApiKey(System.getenv().get("SMSsecret"));
@@ -42,10 +45,10 @@ public class InfoBidApiService {
         try {
 
             response = sendSmsApi.sendSmsMessage(smsMessageRequest);
-            //log.info("sent message {}",response);
+            log.info("sent message ref {} and response {}",message.getBatchId(),response);
         } catch (ApiException apiException) {
             // HANDLE THE EXCEPTION
-            //log.info("Errors code {}, header {}, body{} ", apiException.getCode(),apiException.getResponseHeaders(),apiException.getResponseBody());
+            log.info("Errors code {}, header {}, body{} ", apiException.getCode(),apiException.getResponseHeaders(),apiException.getResponseBody());
         }
         String reason;
        if (response==null){
@@ -66,13 +69,13 @@ public class InfoBidApiService {
 
         SendSmsApi sendSmsApi = new SendSmsApi();
         Integer numberOfReportsLimit = 10;
-        //log.info("Getting status");
+        log.info("Getting status");
         SmsDeliveryResult deliveryReports = sendSmsApi.getOutboundSmsMessageDeliveryReports(bulkId, messageId, numberOfReportsLimit);
 
         for (SmsReport report : deliveryReports.getResults()) {
             System.out.println(report.getMessageId() + " - " + report.getStatus().getName());
         }
-       // log.info("Status check complete");
+       log.info("Status check complete");
         //return sendSmsApi.getOutboundSmsMessageDeliveryReports(bulkId,messageId,limit);
     }
 }
