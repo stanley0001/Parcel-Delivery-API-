@@ -7,6 +7,7 @@ import com.stan.parcel.Repositories.MessageRepo;
 import com.stan.parcel.ServiceImplementation.MessageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public ResponseModel multipleMessages(Notification[] notifications){
 }
     String bulkId;
     String batchRef;
+
+    @Async
     public ResponseModel createMessage(Notification notification){
         ResponseModel response=new ResponseModel();
         Stack<String> sentMessageData = new Stack<String>();
@@ -143,6 +146,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
         }
     }
 
+@Async
 public ResponseModel SendToNextInstance(Message message){
     //code to send to communication service
     log.info("passing to communication service notification ref: {}",message.getBatchId());
