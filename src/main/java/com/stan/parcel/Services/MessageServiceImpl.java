@@ -5,7 +5,7 @@ import com.stan.parcel.Percistance.Model.Notification;
 import com.stan.parcel.Percistance.Model.ResponseModel;
 import com.stan.parcel.Repositories.MessageRepo;
 import com.stan.parcel.ServiceImplementation.MessageService;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Stack;
 
+@Log4j2
 @Service
-@Log4j
 @EnableScheduling
 public class MessageServiceImpl implements MessageService {
      private final MessageRepo messageRepo;
@@ -48,7 +48,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
 
         Integer sentMessageCount=0;
         bulkId= String.valueOf(System.currentTimeMillis());
-        log.info("Received Notification(s) received with ref: "+bulkId);
+        log.info("Received Notification(s) received with ref: {}",bulkId);
         if (notification.getTo().length>0){
             for (String recipient:
                     notification.getTo()) {
@@ -69,7 +69,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
                      }
                      log.info("Notification received with ref: "+message.getBatchId());
                 sentMessageData.push(messageRepo.save(message).toString());
-                log.info("Notification saved with ref: "+message.getBatchId());
+                log.info("Notification saved with ref: {}",message.getBatchId());
                      response.setReason(sentMessageData.toString());
                      sentMessageCount+=1;
             }
@@ -100,7 +100,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
             if (message.getScheduled()==Boolean.FALSE){
                 message.setUpdatedAt(LocalDateTime.now());
                 messageRepo.save(message);
-                log.info("Sending notification ref: "+message.getBatchId());
+                log.info("Sending notification ref: {}",message.getBatchId());
                 this.SendToNextInstance(message);
 
             }else
@@ -109,7 +109,7 @@ public ResponseModel multipleMessages(Notification[] notifications){
                 if (message.getScheduledTime().isBefore(LocalDateTime.now())){
                     message.setUpdatedAt(LocalDateTime.now());
                     messageRepo.save(message);
-                    log.info("Sending notification ref: "+message.getBatchId());
+                    log.info("Sending notification ref: {}",message.getBatchId());
                     this.SendToNextInstance(message);
 
                 }
@@ -131,13 +131,13 @@ public ResponseModel multipleMessages(Notification[] notifications){
                     message.setRetries(message.getRetries() + 1);
                     message.setUpdatedAt(LocalDateTime.now());
                     messageRepo.save(message);
-                    log.info("Rending notification ref: "+message.getBatchId());
+                    log.info("Rending notification ref: {}",message.getBatchId());
                     this.SendToNextInstance(message);
                 }
             }else{
                 //maximum attempt check
                 message.setStatus("FAILED-MAX-ATTEMPT");
-                log.info("notification sending failed with error FAILED-MAX-ATTEMPT notification ref: "+message.getBatchId());
+                log.info("notification ref: {} failed with FAILED-MAX-ATTEMPT error",message.getBatchId());
                 messageRepo.save(message);
             }
         }
@@ -145,9 +145,9 @@ public ResponseModel multipleMessages(Notification[] notifications){
 
 public ResponseModel SendToNextInstance(Message message){
     //code to send to communication service
-    log.info("passing to communication service notification ref: "+message.getBatchId());
+    log.info("passing to communication service notification ref: {}",message.getBatchId());
     ResponseModel response=communicationService.receiveNotification(message);
-    log.info("communication service response "+response);
+    log.info("communication service response {}",response);
     if(response.getStatus()!=HttpStatus.OK){
         //Failing all status
         message.setStatus("FAILED");
@@ -156,6 +156,7 @@ public ResponseModel SendToNextInstance(Message message){
             message.setStatus("PROCESSING");
             if (response.getError()=="Invalid Address"){
                 message.setStatus("Invalid Address "+message.getRecipient());
+                log.info("Invalid Address {}",message.getRecipient());
             }
         }
     }else {
